@@ -100,3 +100,6 @@
 [submodule "vismatch/third_party/UPAL"]
 	path = vismatch/third_party/UPAL
 	url = https://github.com/francois141/upal
+[submodule "vismatch/third_party/UniCorrn"]
+	path = vismatch/third_party/UniCorrn
+	url = https://github.com/neu-vi/UniCorrn

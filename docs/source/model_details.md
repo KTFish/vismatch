@@ -26,6 +26,13 @@ Most models can run on both CPU and GPU. If a runtime shows ❌, that model cann
         <td></td>
         <td></td>
       </tr>
+      <tr>
+        <td>UniCorrn (CVPR '26)</td>
+        <td><a href="https://github.com/neu-vi/UniCorrn">Official</a></td>
+        <td><a href="https://arxiv.org/abs/2605.04044">arxiv</a></td>
+        <td></td>
+        <td></td>
+      </tr>
     <tr>
       <td>LoMa-R (CVPR IMW '26)</td>
       <td><a href="https://github.com/davnords/LoMa">Official</a></td>

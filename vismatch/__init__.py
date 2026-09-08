@@ -100,6 +100,7 @@ available_models = [
     "xfeat-star-steerers-learned",
     "loma",
     "loma-r",
+    "unicorn",
 ]
 
 
@@ -506,6 +507,10 @@ def get_matcher(
         from vismatch.im_models import loma
 
         return loma.LoMaMatcher(device, max_num_keypoints, arch="LoMa-R", *args, **kwargs)
+    elif matcher_name == "unicorn":
+        from vismatch.im_models import unicorn
+
+        return unicorn.UnicornMatcher(device, max_num_keypoints, *args, **kwargs)
 
     else:
         raise RuntimeError(
