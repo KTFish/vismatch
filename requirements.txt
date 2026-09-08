@@ -31,3 +31,4 @@ flow_vis>=0.1 # for UFM
 uniception==0.1.1 # for UFM
 h5py>=3.6
 setuptools>=83
+fvcore>=0.1.5 # for UniCorrn
