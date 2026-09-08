@@ -34,3 +34,5 @@ setuptools>=83
 fvcore>=0.1.5 # for UniCorrn
 accelerate>=0.20.0 # for UniCorrn
 easydict>=1.9 # for UniCorrn
+networkx>=2.5 # for UniCorrn
+open3d>=0.16.0 # for UniCorrn
