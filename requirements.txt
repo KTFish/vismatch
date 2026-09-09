@@ -31,8 +31,9 @@ flow_vis>=0.1 # for UFM
 uniception==0.1.1 # for UFM
 h5py>=3.6
 setuptools>=83
-fvcore>=0.1.5 # for UniCorrn
-accelerate>=0.20.0 # for UniCorrn
-easydict>=1.9 # for UniCorrn
-networkx>=2.5 # for UniCorrn
-open3d>=0.16.0 # for UniCorrn
+fvcore>=0.1.5       # for UniCorrn
+accelerate>=1.13.0  # for UniCorrn
+easydict>=1.13      # for UniCorrn
+networkx>=3.6.1     # for UniCorrn
+open3d>=0.19.0      # for UniCorrn
+spconv-cu121==2.3.8 # for UniCorrn
