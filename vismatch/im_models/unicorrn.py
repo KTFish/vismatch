@@ -25,6 +25,8 @@ from unicorrn.inference import init_query_points, coarse_to_fine
 class UnicorrnMatcher(BaseMatcher):
     def __init__(self, device="cpu", max_num_keypoints=2048, grid_size=4, weights_path=None, *args, **kwargs):
         super().__init__(device, **kwargs)
+        if not torch.cuda.is_available():
+            raise RuntimeError("UniCorrn matcher requires GPU")
         self.grid_size = grid_size
         self.max_num_keypoints = max_num_keypoints
 
