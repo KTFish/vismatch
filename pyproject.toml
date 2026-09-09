@@ -86,6 +86,7 @@ ignore = ["E402", "E501"]
 [tool.uv.extra-build-dependencies]
 torch-cluster = ["torch"]
 torch-scatter = ["torch"]
+torch-sparse = ["torch"]
 
 [tool.setuptools]
 py-modules = ["vismatch_match", "vismatch_extract", "vismatch_test"]
