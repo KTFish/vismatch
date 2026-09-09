@@ -87,6 +87,14 @@ ignore = ["E402", "E501"]
 torch-cluster = ["torch"]
 torch-scatter = ["torch"]
 
+[tool.uv.sources]
+torch-scatter = { index = "astral-wheels" }
+
+[[tool.uv.index]]
+name = "astral-wheels"
+url = "https://wheels.astral.sh/"
+explicit = true
+
 [tool.setuptools]
 py-modules = ["vismatch_match", "vismatch_extract", "vismatch_test"]
 include-package-data = true
