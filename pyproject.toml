@@ -39,8 +39,24 @@ HuggingFace = "https://huggingface.co/vismatch"
 omniglue = ["tensorflow"]
 sphereglue = ["torch-geometric", "torch-cluster"]
 zippypoint = ["tensorflow>=2.15,<2.16", "keras<3", "larq>=0.12.2"]
+unicorrn = [
+    "fvcore>=0.1.5",
+    "accelerate>=1.13.0",
+    "easydict>=1.13",
+    "networkx>=3.6.1",
+    "addict>=2.4.0",
+    "open3d>=0.19.0",
+    "spconv-cu121==2.3.8",
+    "torch-scatter>=2.1.2",
+    "torch-sparse>=0.6.18",
+    "torch-cluster>=1.6.3",
+    "torch-geometric>=2.8.0",
+    "xformers>=0.0.35",
+    "pykeops>=2.3",
+    "kiss-icp>=1.3.0",
+]
 all = [
-    "vismatch[omniglue, sphereglue]",
+    "vismatch[omniglue, sphereglue, unicorrn]",
     'vismatch[zippypoint]; python_version < "3.12"',
 ]
 docs = [
@@ -69,6 +85,7 @@ ignore = ["E402", "E501"]
 
 [tool.uv.extra-build-dependencies]
 torch-cluster = ["torch"]
+torch-scatter = ["torch"]
 
 [tool.setuptools]
 py-modules = ["vismatch_match", "vismatch_extract", "vismatch_test"]
