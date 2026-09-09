@@ -88,11 +88,11 @@ torch-cluster = ["torch"]
 torch-scatter = ["torch"]
 
 [tool.uv.sources]
-torch-scatter = { index = "astral-wheels" }
+torch-scatter = { index = "pyg-wheels" }
 
 [[tool.uv.index]]
-name = "astral-wheels"
-url = "https://wheels.astral.sh/"
+name = "pyg-wheels"
+url = "https://data.pyg.org/whl/torch-2.11.0+cu128.html"
 explicit = true
 
 [tool.setuptools]
