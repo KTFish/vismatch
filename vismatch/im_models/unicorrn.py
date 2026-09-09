@@ -3,6 +3,14 @@ import numpy as np
 import torch
 from huggingface_hub import hf_hub_download
 
+import sys
+from unittest.mock import MagicMock
+
+try:
+    import torch_scatter
+except Exception:
+    sys.modules["torch_scatter"] = MagicMock()
+
 from vismatch import BaseMatcher, THIRD_PARTY_DIR
 from vismatch.utils import add_to_path
 
