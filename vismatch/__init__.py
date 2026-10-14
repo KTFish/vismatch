@@ -141,32 +141,42 @@ def get_matcher(
     if isinstance(matcher_name, list):
         from vismatch.base_matcher import EnsembleMatcher
 
-        return EnsembleMatcher(matcher_name, device, *args, **kwargs)
+        return EnsembleMatcher(matcher_name, device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "xfeat-subpx":
         from vismatch.im_models import keypt2subpx
 
-        return keypt2subpx.Keypt2SubpxMatcher(device, detector_name="xfeat", *args, **kwargs)
+        return keypt2subpx.Keypt2SubpxMatcher(
+            device, max_num_keypoints=max_num_keypoints, detector_name="xfeat", *args, **kwargs
+        )
 
     elif matcher_name == "xfeat-lightglue-subpx":
         from vismatch.im_models import keypt2subpx
 
-        return keypt2subpx.Keypt2SubpxMatcher(device, detector_name="xfeat-lightglue", *args, **kwargs)
+        return keypt2subpx.Keypt2SubpxMatcher(
+            device, max_num_keypoints=max_num_keypoints, detector_name="xfeat-lightglue", *args, **kwargs
+        )
 
     elif matcher_name == "dedode-subpx":
         from vismatch.im_models import keypt2subpx
 
-        return keypt2subpx.Keypt2SubpxMatcher(device, detector_name="dedode", *args, **kwargs)
+        return keypt2subpx.Keypt2SubpxMatcher(
+            device, max_num_keypoints=max_num_keypoints, detector_name="dedode", *args, **kwargs
+        )
 
     elif matcher_name == "superpoint-lightglue-subpx":
         from vismatch.im_models import keypt2subpx
 
-        return keypt2subpx.Keypt2SubpxMatcher(device, detector_name="superpoint-lightglue", *args, **kwargs)
+        return keypt2subpx.Keypt2SubpxMatcher(
+            device, max_num_keypoints=max_num_keypoints, detector_name="superpoint-lightglue", *args, **kwargs
+        )
 
     elif matcher_name == "aliked-lightglue-subpx":
         from vismatch.im_models import keypt2subpx
 
-        return keypt2subpx.Keypt2SubpxMatcher(device, detector_name="aliked-lightglue", *args, **kwargs)
+        return keypt2subpx.Keypt2SubpxMatcher(
+            device, max_num_keypoints=max_num_keypoints, detector_name="aliked-lightglue", *args, **kwargs
+        )
 
     elif matcher_name == "upal":
         from vismatch.im_models import upal
@@ -176,7 +186,7 @@ def get_matcher(
     elif matcher_name == "liftfeat":
         from vismatch.im_models import liftfeat
 
-        return liftfeat.LiftFeatMatcher(device, *args, **kwargs)
+        return liftfeat.LiftFeatMatcher(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "loftr":
         from vismatch.im_models import loftr
@@ -374,7 +384,7 @@ def get_matcher(
     elif matcher_name == "dedode-lightglue":
         from vismatch.im_models import kornia
 
-        return kornia.DeDoDeLightGlue(device, *args, **kwargs)
+        return kornia.DeDoDeLightGlue(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "gim-dkm":
         from vismatch.im_models import gim
@@ -389,12 +399,12 @@ def get_matcher(
     elif matcher_name == "silk":
         from vismatch.im_models import silk
 
-        return silk.SilkMatcher(device, *args, **kwargs)
+        return silk.SilkMatcher(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "omniglue":
         from vismatch.im_models import omniglue
 
-        return omniglue.OmniglueMatcher(device, *args, **kwargs)
+        return omniglue.OmniglueMatcher(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "sift-sphereglue":
         from vismatch.im_models import sphereglue
@@ -409,12 +419,12 @@ def get_matcher(
     elif matcher_name == "minima":
         from vismatch.im_models import minima
 
-        return minima.MINIMASuperpointLightGlueMatcher(device, *args, **kwargs)
+        return minima.MINIMASuperpointLightGlueMatcher(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "minima-superpoint-lightglue":
         from vismatch.im_models import minima
 
-        return minima.MINIMASuperpointLightGlueMatcher(device, *args, **kwargs)
+        return minima.MINIMASuperpointLightGlueMatcher(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "minima-roma":
         from vismatch.im_models import minima
@@ -439,7 +449,7 @@ def get_matcher(
     elif matcher_name == "rdd":
         from vismatch.im_models import rdd
 
-        return rdd.RDDMatcher(device, mode="sparse", *args, **kwargs)
+        return rdd.RDDMatcher(device, mode="sparse", max_num_keypoints=max_num_keypoints, *args, **kwargs)
 
     elif matcher_name == "rdd-star":
         from vismatch.im_models import rdd
@@ -449,12 +459,14 @@ def get_matcher(
     elif matcher_name == "rdd-lightglue":
         from vismatch.im_models import rdd
 
-        return rdd.RDD_LightGlueMatcher(device, *args, **kwargs)
+        return rdd.RDD_LightGlueMatcher(device, *args, max_num_keypoints=max_num_keypoints, **kwargs)
 
     elif matcher_name == "rdd-aliked":
         from vismatch.im_models import rdd
 
-        return rdd.RDD_ThirdPartyMatcher(device, detector="aliked", *args, **kwargs)
+        return rdd.RDD_ThirdPartyMatcher(
+            device, detector="aliked", max_num_keypoints=max_num_keypoints, *args, **kwargs
+        )
 
     elif matcher_name == "edm":
         from vismatch.im_models import edm

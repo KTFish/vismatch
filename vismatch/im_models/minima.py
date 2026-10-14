@@ -26,12 +26,13 @@ class MINIMAMatcher(BaseMatcher):
 
 
 class MINIMASuperpointLightGlueMatcher(MINIMAMatcher):
-    def __init__(self, device="cpu", **kwargs):
+    def __init__(self, device="cpu", max_num_keypoints=2048, **kwargs):
         super().__init__(device, **kwargs)
 
         self.model_args.ckpt = f"{snapshot_download('vismatch/minima')}/minima_lightglue.pt"
 
         self.matcher = load_sp_lg(self.model_args).model.to(self.device)
+        self.matcher.extractor.conf.max_num_keypoints = max_num_keypoints
 
     def preprocess(self, img):
         _, h, w = img.shape

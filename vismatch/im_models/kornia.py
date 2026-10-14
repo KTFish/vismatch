@@ -14,9 +14,11 @@ class DeDoDeLightGlue(BaseMatcher):
         device="cpu",
         detector_weights="L-C4-v2",
         desc_weights="B-upright",
+        max_num_keypoints=2048,
         **kwargs,
     ):
         super().__init__(device, **kwargs)
+        self.max_num_keypoints = max_num_keypoints
 
         major, minor, patch = get_version(kornia)
         assert major > 1 or (minor > 7 or (minor == 7 and patch >= 3)), (
@@ -47,8 +49,8 @@ class DeDoDeLightGlue(BaseMatcher):
         img0 = self.preprocess(img0)
         img1 = self.preprocess(img1)
 
-        kpts0, scores0, desc0 = self.model(img0)
-        kpts1, scores1, desc1 = self.model(img1)
+        kpts0, scores0, desc0 = self.model(img0, n=self.max_num_keypoints)
+        kpts1, scores1, desc1 = self.model(img1, n=self.max_num_keypoints)
 
         match_input = {
             "image0": {

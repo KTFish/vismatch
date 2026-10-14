@@ -132,10 +132,13 @@ class SteererMatcher(BaseMatcher):
 
         H0, W0, H1, W1 = *img0.shape[-2:], *img1.shape[-2:]
         mkpts0, mkpts1 = self.matcher.to_pixel_coords(matches_0, matches_1, H0, W0, H1, W1)
+        keypoints_0, keypoints_1 = self.matcher.to_pixel_coords(keypoints_0[0], keypoints_1[0], H0, W0, H1, W1)
 
         # dedode sometimes requires reshaping an image to fit vit patch size evenly, so we need to
         # rescale kpts to the original img
         mkpts0 = self.rescale_coords(mkpts0, *img0_orig_shape, H0, W0)
         mkpts1 = self.rescale_coords(mkpts1, *img1_orig_shape, H1, W1)
+        keypoints_0 = self.rescale_coords(keypoints_0, *img0_orig_shape, H0, W0)
+        keypoints_1 = self.rescale_coords(keypoints_1, *img1_orig_shape, H1, W1)
 
-        return mkpts0, mkpts1, keypoints_0[0], keypoints_1[0], description_0[0], description_1[0], None
+        return mkpts0, mkpts1, keypoints_0, keypoints_1, description_0[0], description_1[0], None

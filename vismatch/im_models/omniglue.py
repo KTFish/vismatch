@@ -7,6 +7,7 @@ hide_gpu_from_tensorflow(tensorflow)
 
 import py3_wget
 import tarfile
+from functools import partial
 import zipfile
 from pathlib import Path
 from kornia import tensor_to_image
@@ -30,7 +31,7 @@ import omniglue
 class OmniglueMatcher(BaseMatcher):
     hf_model_id = "vismatch/omniglue"
 
-    def __init__(self, device="cpu", conf_thresh=0.02, **kwargs):
+    def __init__(self, device="cpu", conf_thresh=0.02, max_num_keypoints=2048, **kwargs):
         super().__init__(device, **kwargs)
         cache_dir = Path(snapshot_download(self.hf_model_id))
         self.OG_WEIGHTS_PATH = cache_dir / "og_export"
@@ -43,6 +44,8 @@ class OmniglueMatcher(BaseMatcher):
             sp_export=str(self.SP_WEIGHTS_PATH),
             dino_export=str(self.DINOv2_PATH),
         )
+        # FindMatches calls the SuperPoint extractor with its default of 1024 keypoints, so set the limit on the extractor
+        self.model.sp_extract = partial(self.model.sp_extract, num_features=max_num_keypoints)
 
         self.conf_thresh = conf_thresh
 

@@ -28,14 +28,14 @@ class Keypt2SubpxMatcher(BaseMatcher):
         "dedode": "dedode",
     }
 
-    def __init__(self, device="cpu", detector_name: str | None = None, **kwargs):
+    def __init__(self, device="cpu", detector_name: str | None = None, max_num_keypoints=2048, **kwargs):
         super().__init__(device, **kwargs)
 
         self.detector_name = detector_name
         if detector_name == "superpoint-lightglue":
-            self.matcher = SuperPointDense(self.device)
+            self.matcher = SuperPointDense(self.device, max_num_keypoints)
         else:
-            self.matcher = get_matcher(detector_name, device=device, **kwargs)
+            self.matcher = get_matcher(detector_name, device=device, max_num_keypoints=max_num_keypoints, **kwargs)
         detector = self.THIRDPARTY_NAMES[detector_name]
         self.keypt2subpx = torch.hub.load(
             "KimSinjeong/keypt2subpx", "Keypt2Subpx", pretrained=True, detector=detector, verbose=False, trust_repo=True
@@ -111,11 +111,12 @@ class SuperPointDense(BaseMatcher):
         "allow_no_extract": True,
     }
 
-    def __init__(self, device="cpu", **kwargs):
+    def __init__(self, device="cpu", max_num_keypoints=2048, **kwargs):
         super().__init__(device, **kwargs)
 
         self.config = OmegaConf.create(self.modelconf)
-        self.extractor = SuperPoint(self.config).to(self.device).eval()
+        self.config.extractor.max_num_keypoints = max_num_keypoints
+        self.extractor = SuperPoint(self.config.extractor).to(self.device).eval()
         self.matcher = LightGlue(features="superpoint", depth_confidence=-1, width_confidence=-1).to(self.device)
         self.scoremaps = {}
 
