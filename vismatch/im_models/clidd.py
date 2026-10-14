@@ -1,10 +1,8 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from pathlib import Path
-
-import py3_wget
-from huggingface_hub import snapshot_download
+from huggingface_hub import hf_hub_download
+from safetensors.torch import load_file
 
 from vismatch import THIRD_PARTY_DIR, BaseMatcher
 from vismatch.utils import add_to_path
@@ -30,9 +28,7 @@ class CLIDDMatcher(BaseMatcher):
 
         variant = variant.upper()
         if variant not in CLIDD.cfgs:
-            raise ValueError(
-                f"Unknown CLIDD variant '{variant}'. Supported: {list(CLIDD.cfgs.keys())}"
-            )
+            raise ValueError(f"Unknown CLIDD variant '{variant}'. Supported: {list(CLIDD.cfgs.keys())}")
 
         weights_path = self._get_weights(variant)
 
@@ -44,23 +40,16 @@ class CLIDDMatcher(BaseMatcher):
         self._net.score_thresh = score
 
         self._net.model = Model(**CLIDD.cfgs[variant])
-        state = torch.load(weights_path, map_location="cpu", weights_only=True)
+        state = load_file(weights_path)
         self._net.model.load_state_dict(state)
         self._net.model.eval().to(device)
 
         if radius > 0:
             self._net.mp = nn.MaxPool2d(radius * 2 + 1, 1, radius)
 
-    @staticmethod
-    def _get_weights(variant: str) -> Path:
-        cache_dir = Path(snapshot_download("vismatch/clidd"))
-        weights_path = cache_dir / f"{variant}.pth"
-        if not weights_path.is_file():
-            py3_wget.download_file(
-                f"https://github.com/HITCSC/CLIDD/releases/download/v1.0/{variant}.pth",
-                weights_path,
-            )
-        return weights_path
+    @classmethod
+    def _get_weights(cls, variant: str) -> str:
+        return hf_hub_download("KtheFISH/CLIDD", filename=f"{variant}.safetensors")
 
     def preprocess(self, img):
         return img.unsqueeze(0)
