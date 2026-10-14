@@ -31,6 +31,9 @@ class CLIDDMatcher(BaseMatcher):
 
         weights_path = self._get_weights(variant)
 
+        if device == "cpu":
+            raise RuntimeError("CLIDD requires a CUDA device to run triton.")
+
         # CLIDD.__init__ hardcodes ./weights/{cfg}.pth
         self._net = CLIDD.__new__(CLIDD)
         nn.Module.__init__(self._net)
