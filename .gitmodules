@@ -100,3 +100,6 @@
 [submodule "vismatch/third_party/UPAL"]
 	path = vismatch/third_party/UPAL
 	url = https://github.com/francois141/upal
+[submodule "vismatch/third_party/RaCo"]
+	path = vismatch/third_party/RaCo
+	url = https://github.com/cvg/RaCo

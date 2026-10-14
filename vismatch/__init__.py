@@ -43,6 +43,7 @@ available_models = [
     "disk-lightglue",
     "aliked-lightglue",
     "doghardnet-lightglue",
+    "raco-lightglue",
     "roma",
     "romav2",
     "tiny-roma",
@@ -241,6 +242,11 @@ def get_matcher(
         from vismatch.im_models import lightglue
 
         return lightglue.DognetLightGlue(device, max_num_keypoints, *args, **kwargs)
+
+    elif matcher_name == "raco-lightglue":
+        from vismatch.im_models import raco
+
+        return raco.RaCoLightGlue(device, max_num_keypoints, *args, **kwargs)
 
     elif matcher_name == "roma":
         from vismatch.im_models import roma

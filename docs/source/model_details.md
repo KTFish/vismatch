@@ -41,6 +41,13 @@ Most models can run on both CPU and GPU. If a runtime shows ❌, that model cann
       <td></td>
     </tr>
     <tr>
+      <td>RaCo (3DV '26)</td>
+      <td><a href="https://github.com/cvg/RaCo">Official</a></td>
+      <td><a href="https://arxiv.org/abs/2602.15755">arxiv</a></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
       <td colspan="5" align="center"><strong>2025</strong></td>
     </tr>
     <tr>
