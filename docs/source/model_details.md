@@ -27,6 +27,13 @@ Most models can run on both CPU and GPU. If a runtime shows ❌, that model cann
         <td></td>
       </tr>
     <tr>
+      <td>REDI-Match (arXiv '26)</td>
+      <td><a href="https://github.com/YinjiGe/REDI-Match">Official</a></td>
+      <td><a href="https://arxiv.org/abs/2606.24330">arxiv</a></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
       <td>LoMa-R (CVPR IMW '26)</td>
       <td><a href="https://github.com/davnords/LoMa">Official</a></td>
       <td><a href="https://arxiv.org/abs/2604.11809">arxiv</a></td>

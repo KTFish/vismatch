@@ -47,6 +47,8 @@ available_models = [
     "roma",
     "romav2",
     "tiny-roma",
+    "redimatch",
+    "redimatch-indoor",
     "dedode",
     "steerers",
     "affine-steerers",
@@ -267,6 +269,16 @@ def get_matcher(
         from vismatch.im_models import romav2
 
         return romav2.RoMaV2Matcher(device, max_num_keypoints, *args, **kwargs)
+
+    elif matcher_name == "redimatch":
+        from vismatch.im_models import redimatch
+
+        return redimatch.REDIMatchMatcher(device, max_num_keypoints, *args, **kwargs)
+
+    elif matcher_name == "redimatch-indoor":
+        from vismatch.im_models import redimatch
+
+        return redimatch.REDIMatchMatcher(device, max_num_keypoints, *args, weights="indoor", **kwargs)
 
     elif matcher_name == "tiny-roma":
         from vismatch.im_models import roma

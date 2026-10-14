@@ -103,3 +103,6 @@
 [submodule "vismatch/third_party/RaCo"]
 	path = vismatch/third_party/RaCo
 	url = https://github.com/cvg/RaCo
+[submodule "vismatch/third_party/REDI-Match"]
+	path = vismatch/third_party/REDI-Match
+	url = https://github.com/YinjiGe/REDI-Match

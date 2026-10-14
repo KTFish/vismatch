@@ -176,7 +176,7 @@ python vismatch_extract.py -h
 ## Available Models
 We support the following methods:
 
-**Dense**: ```roma, tiny-roma, duster, master, minima-roma, ufm```
+**Dense**: ```roma, tiny-roma, duster, master, minima-roma, ufm, redimatch[-indoor]```
 
 **Semi-dense**: ```loftr, eloftr, se2loftr, xoftr, minima-loftr, aspanformer, matchformer, xfeat-star, xfeat-star-steerers[-perm/-learned], edm, rdd-star, topicfm[-plus]```
 
