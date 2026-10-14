@@ -1,3 +1,5 @@
+import torch
+from huggingface_hub import hf_hub_download
 from kornia.feature import LoFTR
 import torchvision.transforms as tfm
 from vismatch import BaseMatcher
@@ -7,7 +9,11 @@ class LoftrMatcher(BaseMatcher):
     def __init__(self, device="cpu", *args, **kwargs):
         super().__init__(device, **kwargs)
 
-        self.model = LoFTR(pretrained="outdoor").to(self.device)
+        self.model = LoFTR(pretrained=None).to(self.device)
+        weights = torch.load(
+            hf_hub_download("kornia/loftr", "loftr_outdoor.ckpt"), map_location="cpu", weights_only=True
+        )
+        self.model.load_state_dict(weights["state_dict"])
 
     def preprocess(self, img):
         return tfm.Grayscale()(img).unsqueeze(0).to(self.device)
