@@ -16,10 +16,25 @@ from model.model import Model  # noqa: E402
 
 
 class CLIDDMatcher(BaseMatcher):
-    def __init__(self, device="cpu", max_num_keypoints=2048, score=-5, radius=2, *args, **kwargs):
+    def __init__(
+        self,
+        device="cpu",
+        variant="A48",
+        max_num_keypoints=2048,
+        score=-5,
+        radius=2,
+        *args,
+        **kwargs,
+    ):
         super().__init__(device, **kwargs)
 
-        weights_path = self._get_weights()
+        variant = variant.upper()
+        if variant not in CLIDD.cfgs:
+            raise ValueError(
+                f"Unknown CLIDD variant '{variant}'. Supported: {list(CLIDD.cfgs.keys())}"
+            )
+
+        weights_path = self._get_weights(variant)
 
         # CLIDD.__init__ hardcodes ./weights/{cfg}.pth
         self._net = CLIDD.__new__(CLIDD)
@@ -28,7 +43,7 @@ class CLIDDMatcher(BaseMatcher):
         self._net.radius = radius
         self._net.score_thresh = score
 
-        self._net.model = Model(**CLIDD.cfgs["A48"])
+        self._net.model = Model(**CLIDD.cfgs[variant])
         state = torch.load(weights_path, map_location="cpu", weights_only=True)
         self._net.model.load_state_dict(state)
         self._net.model.eval().to(device)
@@ -37,12 +52,12 @@ class CLIDDMatcher(BaseMatcher):
             self._net.mp = nn.MaxPool2d(radius * 2 + 1, 1, radius)
 
     @staticmethod
-    def _get_weights() -> Path:
+    def _get_weights(variant: str) -> Path:
         cache_dir = Path(snapshot_download("vismatch/clidd"))
-        weights_path = cache_dir / "A48.pth"
+        weights_path = cache_dir / f"{variant}.pth"
         if not weights_path.is_file():
             py3_wget.download_file(
-                "https://github.com/HITCSC/CLIDD/releases/download/v1.0/A48.pth",
+                f"https://github.com/HITCSC/CLIDD/releases/download/v1.0/{variant}.pth",
                 weights_path,
             )
         return weights_path
