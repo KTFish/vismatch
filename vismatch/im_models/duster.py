@@ -1,21 +1,5 @@
 import numpy as np
-from pathlib import Path
 import torchvision.transforms as tfm
-import py3_wget
-import torch
-from huggingface_hub import snapshot_download
-
-# Monkey patch torch.load to use weights_only=False by default for compatibility with PyTorch 2.6+
-_original_torch_load = torch.load
-
-
-def _patched_torch_load(*args, **kwargs):
-    if "weights_only" not in kwargs:
-        kwargs["weights_only"] = False
-    return _original_torch_load(*args, **kwargs)
-
-
-torch.load = _patched_torch_load
 
 from vismatch.utils import add_to_path, resize_to_divisible
 from vismatch import THIRD_PARTY_DIR, BaseMatcher
@@ -30,8 +14,6 @@ from dust3r.utils.geometry import find_reciprocal_matches, xy_grid
 
 
 class Dust3rMatcher(BaseMatcher):
-    hf_model_id = "vismatch/duster"
-    weight_filename = "duster_vit_large.pth"
     vit_patch_size = 16
 
     def __init__(self, device="cpu", *args, **kwargs):
@@ -40,18 +22,7 @@ class Dust3rMatcher(BaseMatcher):
 
         self.verbose = False
 
-        model_path = self.download_weights()
-        self.model = AsymmetricCroCo3DStereo.from_pretrained(model_path).to(device)
-
-    @classmethod
-    def download_weights(cls):
-        url = "https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth"
-        cache_dir = Path(snapshot_download(cls.hf_model_id))
-        model_path = cache_dir / cls.weight_filename
-        if not model_path.is_file():
-            print("Downloading Dust3r(ViT large)... (takes a while)")
-            py3_wget.download_file(url, model_path)
-        return model_path
+        self.model = AsymmetricCroCo3DStereo.from_pretrained("naver/DUSt3R_ViTLarge_BaseDecoder_512_dpt").to(device)
 
     def preprocess(self, img):
         _, h, w = img.shape
