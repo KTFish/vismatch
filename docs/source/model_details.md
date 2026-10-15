@@ -41,6 +41,13 @@ Most models can run on both CPU and GPU. If a runtime shows ❌, that model cann
       <td></td>
     </tr>
     <tr>
+      <td>CLIDD (arXiv '26)</td>
+      <td><a href="https://github.com/HITCSC/CLIDD">Official</a></td>
+      <td><a href="https://arxiv.org/abs/2601.09230">arxiv</a></td>
+      <td>9.581 / 21.004 </td>
+      <td>❌</td>
+    </tr>
+    <tr>
       <td>LoMa (arXiv '26)</td>
       <td><a href="https://github.com/davnords/LoMa">Official</a></td>
       <td><a href="https://arxiv.org/abs/2604.04931">arxiv</a></td>
