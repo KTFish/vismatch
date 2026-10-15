@@ -103,15 +103,7 @@ available_models = [
     "xfeat-star-steerers-learned",
     "loma",
     "loma-r",
-    "clidd",
     "clidd-a48",
-    "clidd-n64",
-    "clidd-t64",
-    "clidd-s64",
-    "clidd-m64",
-    "clidd-l64",
-    "clidd-g128",
-    "clidd-e128",
     "clidd-u128",
 ]
 
@@ -547,11 +539,13 @@ def get_matcher(
 
         return loma.LoMaMatcher(device, max_num_keypoints, arch="LoMa-R", *args, **kwargs)
 
-    elif matcher_name == "clidd" or matcher_name.startswith("clidd-"):
+    elif matcher_name == "clidd-a48":
         from vismatch.im_models import clidd
-
-        variant = matcher_name.split("-", 1)[1] if "-" in matcher_name else "A48"
-        return clidd.CLIDDMatcher(device, *args, variant=variant, max_num_keypoints=max_num_keypoints, **kwargs)
+        return clidd.CLIDDMatcher(device, *args, variant="A48", max_num_keypoints=max_num_keypoints, **kwargs)
+    
+    elif matcher_name == "clidd-u128":
+        from vismatch.im_models import clidd
+        return clidd.CLIDDMatcher(device, *args, variant="U128", max_num_keypoints=max_num_keypoints, **kwargs)
 
     else:
         raise RuntimeError(
