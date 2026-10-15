@@ -542,12 +542,12 @@ def get_matcher(
     elif matcher_name == "clidd-a48":
         from vismatch.im_models import clidd
 
-        return clidd.CLIDDMatcher(device, *args, variant="A48", max_num_keypoints=max_num_keypoints, **kwargs)
+        return clidd.CLIDDMatcher(device, max_num_keypoints, variant="A48", *args, **kwargs)
 
     elif matcher_name == "clidd-u128":
         from vismatch.im_models import clidd
 
-        return clidd.CLIDDMatcher(device, *args, variant="U128", max_num_keypoints=max_num_keypoints, **kwargs)
+        return clidd.CLIDDMatcher(device, max_num_keypoints, variant="U128", *args, **kwargs)
 
     else:
         raise RuntimeError(
