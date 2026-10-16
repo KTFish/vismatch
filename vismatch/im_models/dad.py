@@ -13,6 +13,8 @@ add_to_path(THIRD_PARTY_DIR.joinpath("dad"))
 add_to_path(THIRD_PARTY_DIR.joinpath("RoMa"))
 
 from dad.detectors.dedode_detector import dedode_detector_S, DaD
+from dad.detectors import dedode_detector as dad_detector_module
+from dad import utils as dad_utils
 from romatch import roma_outdoor
 
 patch_sample_keypoints_device(dad_utils, dad_detector_module)
