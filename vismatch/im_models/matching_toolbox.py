@@ -2,7 +2,6 @@ import yaml
 import py3_wget
 import cv2
 import numpy as np
-import os
 import torchvision.transforms as tfm
 import torch
 from contextlib import contextmanager
@@ -209,11 +208,7 @@ class D2netMatcher(BaseMatcher):
 
         with open(BASE_PATH.joinpath("configs/d2net.yml"), "r") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)["sat"]
-        args["ckpt"] = BASE_PATH.joinpath(args["ckpt"])
-
-        if not os.path.isfile(args["ckpt"]):
-            os.makedirs(os.path.dirname(args["ckpt"]), exist_ok=True)
-            py3_wget.download_file("https://dusmanu.com/files/d2-net/d2_tf.pth", args["ckpt"])
+        args["ckpt"] = f"{snapshot_download('vismatch/d2net')}/d2_tf.pth"
 
         self.model = immatch.__dict__[args["class"]](args)
         self.match_threshold = args["match_threshold"]

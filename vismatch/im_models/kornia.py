@@ -1,6 +1,7 @@
 from kornia.feature import DeDoDe, LightGlue
 import torch
 import kornia
+from huggingface_hub import hf_hub_download
 
 from vismatch import get_version, BaseMatcher
 
@@ -38,7 +39,15 @@ class DeDoDeLightGlue(BaseMatcher):
             descriptor_weights=desc_weights,
             amp_dtype=torch.float16 if "cuda" in device else torch.float32,
         ).to(device)
-        self.lightglue = LightGlue(features="dedode" + desc_type).to(device).eval()
+        self.lightglue = LightGlue(features=None).to(device).eval()
+        weights = torch.load(
+            hf_hub_download("kornia/lightglue", f"dedode{desc_type}_lightglue.pth"),
+            map_location="cpu",
+            weights_only=True,
+        )
+        # the file lacks only the confidence_thresholds buffer, which the config sets
+        missing, unexpected = self.lightglue.load_state_dict(weights, strict=False)
+        assert missing == ["confidence_thresholds"] and not unexpected, (missing, unexpected)
 
     def preprocess(self, img):
         # kornia version applies imagenet normalization
