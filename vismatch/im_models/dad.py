@@ -1,5 +1,6 @@
 import torch
 import torchvision.transforms as tfm
+from torchvision.transforms.functional import to_pil_image, Normalize
 
 from vismatch import BaseMatcher, THIRD_PARTY_DIR
 from vismatch.utils import add_to_path, disable_xformers
@@ -12,10 +13,6 @@ from romatch import roma_outdoor
 
 
 class DaDMatcher(BaseMatcher):
-    """DaD keypoint detector paired with RoMa matcher, as in the DaD paper and official benchmark."""
-
-    WEIGHT_URL = "https://github.com/Parskatt/dad/releases/download/v0.1.0/dad.pth"
-
     def __init__(
         self,
         device="cpu",
@@ -25,8 +22,15 @@ class DaDMatcher(BaseMatcher):
     ):
         super().__init__(device, **kwargs)
         self.max_keypoints = max_num_keypoints
+        self.normalizer = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-        # Build detector with official DaD default hyperparameters
+        self._get_detector()
+        self._get_matcher()
+
+        if "cuda" not in str(self.device):
+            disable_xformers()
+
+    def _get_detector(self):
         encoder, decoder = dedode_detector_S()
         self.detector = DaD(
             encoder,
@@ -41,7 +45,7 @@ class DaDMatcher(BaseMatcher):
         )
 
         weights = torch.hub.load_state_dict_from_url(
-            self.WEIGHT_URL,
+            "https://github.com/Parskatt/dad/releases/download/v0.1.0/dad.pth",
             map_location="cpu",
             weights_only=False,
         )
@@ -55,16 +59,14 @@ class DaDMatcher(BaseMatcher):
         #         if hasattr(m, "amp"):
         #             m.amp = False
 
-        # Build RoMa matcher for keypoint matching (as in DaD experiments/benchmark.py)
-        amp_dtype = torch.float16 if "cuda" in str(device) else torch.float32
-        self.roma_model = roma_outdoor(device=device, amp_dtype=amp_dtype)
-        self.roma_model.train(False)
-        self.roma_model.symmetric = False
+        return self.detector
 
-        if "cuda" not in str(self.device):
-            disable_xformers()
-
-        self.normalizer = tfm.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    def _get_matcher(self):
+        amp_dtype = torch.float16 if "cuda" in str(self.device) else torch.float32
+        self.matcher = roma_outdoor(device=self.device, amp_dtype=amp_dtype)
+        self.matcher.train(False)
+        self.matcher.symmetric = False
+        return self.matcher
 
     def _prepare_detector_input(self, img_tensor: torch.Tensor):
         _, H, W = img_tensor.shape
@@ -77,7 +79,6 @@ class DaDMatcher(BaseMatcher):
         return {"image": normalized}, (H, W)
 
     def _forward(self, img0, img1):
-        # Preprocess for DaD detector
         batch0, (h0, w0) = self._prepare_detector_input(img0)
         batch1, (h1, w1) = self._prepare_detector_input(img1)
 
@@ -87,17 +88,14 @@ class DaDMatcher(BaseMatcher):
         kpts0_norm = det0["keypoints"][0]  # (N, 2) in [-1, 1]
         kpts1_norm = det1["keypoints"][0]  # (N, 2) in [-1, 1]
 
-        # Convert detected keypoints to pixel coordinates
         all_kpts0 = self.detector.to_pixel_coords(kpts0_norm, h0, w0)
         all_kpts1 = self.detector.to_pixel_coords(kpts1_norm, h1, w1)
 
-        # Match dense warp with RoMa
-        pil0 = tfm.functional.to_pil_image(img0.cpu())
-        pil1 = tfm.functional.to_pil_image(img1.cpu())
-        warp, certainty = self.roma_model.match(pil0, pil1, batched=False, device=self.device)
+        warp, certainty = self.matcher.match(
+            to_pil_image(img0.cpu()), to_pil_image(img1.cpu()), batched=False, device=self.device
+        )
 
-        # Match sparse keypoints using RoMa warp
-        matches = self.roma_model.match_keypoints(
+        matches = self.matcher.match_keypoints(
             kpts0_norm,
             kpts1_norm,
             warp,
@@ -109,6 +107,6 @@ class DaDMatcher(BaseMatcher):
             mkpts0 = torch.empty((0, 2), device=self.device)
             mkpts1 = torch.empty((0, 2), device=self.device)
         else:
-            mkpts0, mkpts1 = self.roma_model.to_pixel_coordinates(matches, h0, w0, h1, w1)
+            mkpts0, mkpts1 = self.matcher.to_pixel_coordinates(matches, h0, w0, h1, w1)
 
         return mkpts0, mkpts1, all_kpts0, all_kpts1, None, None, None
