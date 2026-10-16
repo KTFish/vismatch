@@ -61,11 +61,10 @@ class DaDMatcher(BaseMatcher):
         self.detector.eval().to(self.device)
 
         # Disable amp on non-CUDA devices to prevent float16 CPU autocast failure
-        # ensure this code is required via: python vismatch_test.py --matchers dad --device cpu
-        # if "cuda" not in str(self.device):
-        #     for m in self.detector.modules():
-        #         if hasattr(m, "amp"):
-        #             m.amp = False
+        if "cuda" not in str(self.device):
+            for m in self.detector.modules():
+                if hasattr(m, "amp"):
+                    m.amp = False
 
         return self.detector
 
