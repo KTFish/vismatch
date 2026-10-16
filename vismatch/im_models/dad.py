@@ -1,3 +1,6 @@
+import tempfile
+from pathlib import Path
+
 import torch
 import torchvision.transforms as tfm
 from torchvision.transforms.functional import to_pil_image
@@ -79,6 +82,11 @@ class DaDMatcher(BaseMatcher):
         normalized = self.normalizer(resized).unsqueeze(0).to(self.device)
         return {"image": normalized}, (H, W)
 
+    def _save_temp_image(self, img: torch.Tensor):
+        temp = tempfile.NamedTemporaryFile("w+b", suffix=".png", delete=False)
+        to_pil_image(img.cpu()).save(temp.name, format="png")
+        return temp
+
     def _forward(self, img0, img1):
         batch0, (h0, w0) = self._prepare_detector_input(img0)
         batch1, (h1, w1) = self._prepare_detector_input(img1)
@@ -92,9 +100,14 @@ class DaDMatcher(BaseMatcher):
         all_kpts0 = self.detector.to_pixel_coords(kpts0_norm, h0, w0)
         all_kpts1 = self.detector.to_pixel_coords(kpts1_norm, h1, w1)
 
-        warp, certainty = self.matcher.match(
-            to_pil_image(img0.cpu()), to_pil_image(img1.cpu()), batched=False, device=self.device
-        )
+        img0_temp = self._save_temp_image(img0)
+        img1_temp = self._save_temp_image(img1)
+
+        warp, certainty = self.matcher.match(img0_temp.name, img1_temp.name, batched=False, device=self.device)
+
+        img0_temp.close(), img1_temp.close()
+        Path(img0_temp.name).unlink()
+        Path(img1_temp.name).unlink()
 
         matches = self.matcher.match_keypoints(
             kpts0_norm,
