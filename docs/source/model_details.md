@@ -68,7 +68,7 @@ Most models can run on both CPU and GPU. If a runtime shows ❌, that model cann
       <td>DaD (arXiv '25)</td>
       <td><a href="https://github.com/Parskatt/dad">Official</a></td>
       <td><a href="https://arxiv.org/abs/2503.07347">arxiv</a></td>
-      <td></td>
+      <td>11.027</td>
       <td></td>
     </tr>
       <tr>

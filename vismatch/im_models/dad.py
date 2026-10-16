@@ -7,13 +7,15 @@ from torchvision.transforms.functional import to_pil_image
 from torchvision.transforms import Normalize
 
 from vismatch import BaseMatcher, THIRD_PARTY_DIR
-from vismatch.utils import add_to_path, disable_xformers
+from vismatch.utils import add_to_path, disable_xformers, patch_sample_keypoints_device
 
 add_to_path(THIRD_PARTY_DIR.joinpath("dad"))
 add_to_path(THIRD_PARTY_DIR.joinpath("RoMa"))
 
 from dad.detectors.dedode_detector import dedode_detector_S, DaD
 from romatch import roma_outdoor
+
+patch_sample_keypoints_device(dad_utils, dad_detector_module)
 
 
 class DaDMatcher(BaseMatcher):
