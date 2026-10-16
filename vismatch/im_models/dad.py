@@ -1,6 +1,7 @@
 import torch
 import torchvision.transforms as tfm
-from torchvision.transforms.functional import to_pil_image, Normalize
+from torchvision.transforms.functional import to_pil_image
+from torchvision.transforms import Normalize
 
 from vismatch import BaseMatcher, THIRD_PARTY_DIR
 from vismatch.utils import add_to_path, disable_xformers
